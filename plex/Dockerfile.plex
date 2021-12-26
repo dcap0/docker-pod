@@ -1,0 +1,31 @@
+FROM ubuntu
+
+EXPOSE 1024
+
+RUN apt update && apt upgrade -y
+RUN apt install apt-transport-https curl gpg wget -y
+
+RUN curl https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor | tee /usr/share/keyrings/plex-archive-keyring.gpg >/dev/null
+RUN echo deb [signed-by=/usr/share/keyrings/plex-archive-keyring.gpg] https://downloads.plex.tv/repo/deb public main | tee /etc/apt/sources.list.d/plexmediaserver.list
+RUN apt update
+RUN echo "N\r" | apt install plexmediaserver -y
+
+# RUN wget https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py -O /usr/local/bin/systemctl
+
+RUN Environment="PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=/var/lib/plexmediaserver/Library/Application Support"
+RUN Environment=PLEX_MEDIA_SERVER_HOME=/usr/lib/plexmediaserver
+RUN Environment=PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=6
+RUN export PLEX_MEDIA_SERVER_INFO_VENDOR="Ubuntu";
+RUN export PLEX_MEDIA_SERVER_INFO_DEVICE="PC";
+RUN export PLEX_MEDIA_SERVER_INFO_MODEL="$(uname -m)";
+RUN export PLEX_MEDIA_SERVER_INFO_PLATFORM_VERSION="Ubuntu";
+
+
+# /bin/sh -c '\
+# export PLEX_MEDIA_SERVER_INFO_VENDOR="$(grep ^NAME= /etc/os-release | awk -F= "{print \\$2}" | tr -d \\" )"; \
+# export PLEX_MEDIA_SERVER_INFO_DEVICE="PC"; \
+# export PLEX_MEDIA_SERVER_INFO_MODEL="$(uname -m)"; \
+# export PLEX_MEDIA_SERVER_INFO_PLATFORM_VERSION="$(grep ^VERSION= /etc/os-release | awk -F= "{print \\$2}" | tr -d \\" )"; \
+# exec "/usr/lib/plexmediaserver/Plex Media Server"'
+
+CMD ["/usr/lib/plexmediaserver/Plex Media Server" ]
