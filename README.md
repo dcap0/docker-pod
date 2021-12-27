@@ -4,9 +4,9 @@
 ---
 ### Current Containers
  - Plex Media Server
+ - Minecraft
 ---
 ### Planned Containers
- - Minecraft
  - Valheim
  - Git/GitLab?
 
