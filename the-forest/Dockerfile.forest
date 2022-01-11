@@ -1,0 +1,16 @@
+FROM ubuntu
+
+SHELL [ "/bin/bash","-c" ]
+
+WORKDIR /the-forest
+
+RUN apt update
+RUN apt install software-properties-common -y
+RUN add-apt-repository multiverse
+RUN dpkg --add-architecture i386
+RUN apt update
+RUN apt install lib32gcc1 steamcmd -y
+RUN steamcmd -login <anonymous> -force_install_dir . -app_update 556450
+
+
+CMD echo "Hello World!"
