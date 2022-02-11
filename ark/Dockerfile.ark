@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM steamcmd/steamcmd
 EXPOSE 1027
 WORKDIR /ark
 SHELL ["/bin/bash","-c"]
@@ -6,17 +6,11 @@ SHELL ["/bin/bash","-c"]
 
 ARG server_name=DDMACARK
 ARG server_pass=Password
-ARG admin_pass=SecretPassword
+
 
 ENV SERVER_NAME=server_name
 ENV SERVER_PASS=server_pass
-ENV ADMIN_PASS=admin_pass
 
-
-RUN add-apt-repository multiverse
-RUN dpkg --add-architecture i386
-RUN apt install lib32gcc steamcmd -y
-RUN ln -s /usr/games/steamcmd steamcmd
 
 RUN echo "fs.file-max=100000" >> /etc/sysctl.conf
 
@@ -24,10 +18,10 @@ RUN sysctl -p /etc/sysctl.conf
 
 RUN echo "session require pam_limits.so" >> /etc/pam.d/common-session
 
-RUN steamcmd +login anonymous +force_install_dir /ark +app_update 376030 +quit
+RUN steamcmd +force_install_dir /ark +login anonymous +app_update 376030 +quit
 
 COPY ./server_start.sh /ark/ShooterGame/Binaries/Linux/server_start.sh
 
-RUN chmod +x server_start.sh
+RUN chmod +x /ark/ShooterGame/Binaries/Linux/server_start.sh
 
 CMD /ark/ShooterGame/Binaries/Linux/server_start.sh
