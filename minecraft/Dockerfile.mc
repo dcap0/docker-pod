@@ -22,5 +22,6 @@ RUN git config --global core.autocrlf false
 RUN java -jar BuildTools.jar --rev $version
 RUN java -jar ./spigot-${version}.jar
 RUN sed -i 's/false/true/g' eula.txt
+COPY ./server.properties /minecraft/server.properties
 
 CMD java $XMX $XMS -jar $JARFILE
